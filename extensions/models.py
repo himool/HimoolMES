@@ -21,26 +21,28 @@ class AmountField(DecimalField):
 
 class RefModel(Model):
 
-    class ModelQuerySet(QuerySet):
-
-        def delete(self):
-            try:
-                super().delete()
-            except ProtectedError as e:
-                if self.is_deleted:
-                    raise ValidationError('数据已被引用, 无法彻底删除') from e
-
-                self.is_deleted = True
-                self.delete_time = pendulum.now().to_datetime_string()
-                self.save(update_fields=['is_deleted', 'delete_time'])
+    class RefManager(Manager):
+        def get_queryset(self):
+            return super().get_queryset().filter(is_deleted=False)
 
     is_deleted = BooleanField(default=False, verbose_name='删除状态')
     delete_time = DateTimeField(null=True, verbose_name='删除时间')
 
-    objects = Manager.from_queryset(ModelQuerySet)()
+    objects = RefManager()
 
     class Meta:
         abstract = True
+
+    def delete(self, using=None, keep_parents=None):
+        try:
+            super().delete(using, keep_parents)
+        except ProtectedError as e:
+            if self.is_deleted:
+                raise ValidationError('数据已被引用, 无法彻底删除') from e
+
+            self.is_deleted = True
+            self.delete_time = pendulum.now().to_datetime_string()
+            self.save(update_fields=['is_deleted', 'delete_time'])
 
 
 __all__ = [

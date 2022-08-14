@@ -13,7 +13,7 @@ class Number(Decimal):
         return super().__new__(cls, value=str(value), context=context)
 
 
-def get_next_number(last_number: str | None, default_number: str) -> str:
+def get_next_number(last_number, default_number: str) -> str:
     """获取编号"""
 
     if not last_number or not (result := re.findall('[0-9]+', last_number)):
