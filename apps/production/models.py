@@ -10,7 +10,7 @@ class ProcessRoute(Model):
     """工艺路线"""
 
 
-class ProductionPlan(Model):
+class ProductionOrder(Model):
     """生产计划"""
 
 
