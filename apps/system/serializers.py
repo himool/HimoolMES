@@ -52,8 +52,7 @@ class UserSerializer(BaseSerializer):
 
     class Meta:
         model = User
-        read_only_fields = ['id', 'warehouse_items', 'role_items', 'permissions', 'is_manager',
-                            'update_time', 'create_time']
+        read_only_fields = ['id', 'role_items', 'permissions', 'is_manager', 'update_time', 'create_time']
         fields = ['username', 'name', 'code', 'phone', 'role_set',  'remark',
                   'is_active', *read_only_fields]
         validators = [TeamUniqueValidator(fields=['username'], message='用户名已存在/已删除'),
