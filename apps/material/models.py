@@ -13,7 +13,7 @@ class MaterialCategory(Model):
         unique_together = [('name', 'team')]
 
 
-class Material(Model):
+class Material(RefModel):
     """物料"""
 
     class Type(TextChoices):
@@ -22,7 +22,6 @@ class Material(Model):
         RAW_MATERIAL = ('raw_material', '原材料')
         FINISHED_PRODUCT = ('finished_product', '成品')
 
- 
     number = CharField(max_length=32, verbose_name='编号')
     name = CharField(max_length=64, verbose_name='名称')
     type = CharField(max_length=32, choices=Type.choices, verbose_name='类型')
@@ -47,9 +46,6 @@ class MaterialBill(Model):
     quantity = FloatField(verbose_name='数量')
     remark = CharField(max_length=256, null=True, blank=True, verbose_name='备注')
     team = ForeignKey('system.Team', on_delete=CASCADE, related_name='material_set')
-
-    class Meta:
-        unique_together = [('parent', 'material', 'team')]
 
 
 __all__ = [
