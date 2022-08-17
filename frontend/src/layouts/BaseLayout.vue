@@ -5,7 +5,6 @@
         <sidebar :collapsed="collapsed" />
       </a-layout-sider>
 
-      <!-- <a-layout v-if="isLogin"> -->
       <a-layout>
         <a-layout-header class="headbar">
           <headbar :collapsed="collapsed" :username="'admin'" @toggleCollapsed="toggleCollapsed" />
@@ -20,11 +19,10 @@
 </template>
 
 <script>
-import { getInfo } from "@/api/user";
+import { getInfo } from "@/apis/system";
 import Cookies from "js-cookie";
 
 export default {
-  name: "BaseLayout",
   components: {
     Headbar: () => import("@/components/Headbar/Headbar"),
     Sidebar: () => import("@/components/Sidebar/Sidebar"),
@@ -38,7 +36,6 @@ export default {
   },
   data() {
     return {
-      isLogin: false,
       collapsed: false,
       isRouterAlive: true,
     };
@@ -53,24 +50,13 @@ export default {
   },
   methods: {
     initialize() {
-      // if (!Cookies.get("access") || !Cookies.get("refresh")) {
-      //   return this.$router.push("/user/login");
-      // }
+      if (!Cookies.get("access") || !Cookies.get("refresh")) {
+        return this.$router.push("/user/login");
+      }
 
-      // getInfo().then(data => {
-      //   this.isLogin = true;
-      //   // this.getConfig();
-      //   this.$store.commit('setUser', data);
-      // });
-    },
-    getConfig() {
-      // configList()
-      //   .then(resp => {
-      //     this.$store.commit('setConfig', resp.data);
-      //   })
-      //   .catch(err => {
-      //     this.$message.error(err.response.data.error);
-      //   });
+      getInfo().then((data) => {
+        this.$store.commit("setUser", data);
+      });
     },
     toggleCollapsed() {
       this.collapsed = !this.collapsed;

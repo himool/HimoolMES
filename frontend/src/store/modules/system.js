@@ -1,12 +1,16 @@
 export default {
   state: () => ({
-    config: {},
+    userInfo: {
+      id: undefined,
+      username: "",
+      name: "",
+      is_manager: false,
+      permissions: [],
+    },
   }),
   mutations: {
-    setConfig(state, item) {
-      for (let key of Object.keys(item)) {
-        state.config[key] = item[key].strategy;
-      }
+    serUserInfo(state, item) {
+      state.userInfo = item;
     },
-  }
-}
+  },
+};
