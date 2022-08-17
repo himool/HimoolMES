@@ -41,13 +41,13 @@ class MaterialBillSerializer(BaseSerializer):
             fields = ['id', 'number', 'name', 'spec', 'unit']
             ref_name = 'material.MaterialBillSerializer.MaterialItemSerializer'
 
-    parent_item = MaterialItemSerializer(source='parent', read_only=True, label='父类Item')
-    material_item = MaterialItemSerializer(source='material', read_only=True, label='物料Item')
+    finish_product_item = MaterialItemSerializer(source='finish_product', read_only=True, label='成品Item')
+    raw_material_item = MaterialItemSerializer(source='raw_material', read_only=True, label='原材料Item')
 
     class Meta:
         model = MaterialBill
-        read_only_fields = ['id', 'parent_item', 'material_item']
-        fields = ['parent', 'material', 'quantity', 'remark', *read_only_fields]
+        read_only_fields = ['id', 'finish_product_item', 'raw_material_item']
+        fields = ['finish_product', 'raw_material', 'quantity', 'remark', *read_only_fields]
 
 
 __all__ = [

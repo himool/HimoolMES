@@ -37,9 +37,9 @@ class MaterialBillViewSet(ModelViewSet):
 
     serializer_class = MaterialBillSerializer
     permission_classes = [IsAuthenticated, MaterialBillPermission]
-    filterset_fields = ['parent']
-    search_fields = ['parent__number', 'parent__name']
-    select_related_fields = ['parent', 'material']
+    filterset_fields = ['finish_product']
+    search_fields = ['finish_product__number', 'finish_product__name']
+    select_related_fields = ['finish_product', 'raw_material']
     queryset = MaterialBill.objects.all()
 
 
