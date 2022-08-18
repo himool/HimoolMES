@@ -107,10 +107,10 @@ export default {
       // this.list();
     },
     destroy(id) {
-      // roleDestroy({ id }).then(() => {
-      //   this.$message.success("删除成功");
-      //   this.list();
-      // });
+      roleDestroy({ id }).then(() => {
+        this.$message.success("删除成功");
+        this.list();
+      });
     },
     search() {
       this.searchForm.page = 1;

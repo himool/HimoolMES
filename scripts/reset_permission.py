@@ -3,7 +3,15 @@ import itertools
 
 
 PERMISSIONS = [
-
+    {
+        'name': '基础数据',
+        'permissions': [
+            {'name': '物料分类查询', 'code': 'material_category.get'},
+            {'name': '物料分类创建', 'code': 'material_category.post'},
+            {'name': '物料分类编辑', 'code': 'material_category.put'},
+            {'name': '物料分类删除', 'code': 'material_category.delete'},
+        ],
+    },
 ]
 
 
