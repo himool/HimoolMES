@@ -88,7 +88,13 @@ function redirectLogin() {
 export default function request(item) {
   let { data = {} } = item;
   for (let key in data) {
-    if (data[key] == undefined) delete data[key];
+    if (data[key] === undefined) {
+      if (item.method === "get") {
+        delete data[key];
+      } else {
+        data[key] = null;
+      }
+    }
   }
 
   return instance(item);
