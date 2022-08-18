@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { permissionGroupList, roleList, roleDestroy } from "@/apis/system";
+import { roleList, roleDestroy } from "@/apis/system";
 
 export default {
   components: {
@@ -50,10 +50,7 @@ export default {
         {
           title: "序号",
           dataIndex: "index",
-          key: "index",
-          customRender: (value, item, index) => {
-            return index + 1;
-          },
+          customRender: (value, item, index) => index + 1,
         },
         {
           title: "名称",
@@ -79,15 +76,11 @@ export default {
 
       visible: false,
       targetItem: {},
-      permissionItems: [],
     };
   },
   methods: {
     initialize() {
       this.list();
-      permissionGroupList().then((data) => {
-        this.permissionItems = data;
-      });
     },
     list() {
       this.loading = true;
@@ -101,10 +94,10 @@ export default {
         });
     },
     create(item) {
-      // this.list();
+      this.list();
     },
     update(item) {
-      // this.list();
+      this.list();
     },
     destroy(id) {
       roleDestroy({ id }).then(() => {
