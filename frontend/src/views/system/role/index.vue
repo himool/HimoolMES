@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { permissionGroupList, roleList, roleDestroy } from "@/apis/system";
+
 export default {
   components: {
     FormModal: () => import("./FormModal.vue"),
@@ -82,49 +84,21 @@ export default {
   },
   methods: {
     initialize() {
-      this.items = [
-        { id: 1, name: "管理员", remark: "" },
-        { id: 2, name: "操作员", remark: "" },
-      ];
-
-      this.permissionItems = [
-        {
-          id: 1,
-          name: "基础数据",
-          code: "data",
-          permission_items: [
-            { id: 1, name: "物料分类", code: "category" },
-            { id: 2, name: "物料管理", code: "material" },
-            { id: 3, name: "设备管理", code: "device" },
-            { id: 4, name: "工位管理", code: "station" },
-          ],
-        },
-        {
-          id: 2,
-          name: "生产管理",
-          code: "data",
-          permission_items: [
-            { id: 5, name: "生产计划", code: "production_order" },
-            { id: 6, name: "报工记录", code: "production_record" },
-          ],
-        },
-      ];
-
-      // this.list();
-      // permissionList().then((data) => {
-      //   this.permissionItems = data;
-      // });
+      this.list();
+      permissionGroupList().then((data) => {
+        this.permissionItems = data;
+      });
     },
     list() {
-      // this.loading = true;
-      // roleList(this.searchForm)
-      //   .then((data) => {
-      //     this.pagination.total = data.count;
-      //     this.items = data.results;
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true;
+      roleList(this.searchForm)
+        .then((data) => {
+          this.pagination.total = data.count;
+          this.items = data.results;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     create(item) {
       // this.list();
@@ -139,15 +113,15 @@ export default {
       // });
     },
     search() {
-      // this.searchForm.page = 1;
-      // this.pagination.current = 1;
-      // this.list();
+      this.searchForm.page = 1;
+      this.pagination.current = 1;
+      this.list();
     },
     tableChange(pagination, filters, sorter) {
-      // this.searchForm.page = pagination.current;
-      // this.pagination.current = pagination.current;
-      // this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
-      // this.list();
+      this.searchForm.page = pagination.current;
+      this.pagination.current = pagination.current;
+      this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
+      this.list();
     },
     openFormModal(item) {
       this.targetItem = { ...item };

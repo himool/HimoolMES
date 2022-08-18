@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import router from "@/router";
 import axios from "axios";
 
-const GET_TOKEN_URL = "/user/get_token/";
+const MAKE_TOKEN_URL = "/user/make_token/";
 const REFRESH_TOKEN_URL = "/user/refresh_token/";
 const LOGIN_PATH = "/user/login";
 let requestQueue = [],
@@ -17,7 +17,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    if (!config.url.includes(GET_TOKEN_URL) && !config.url.includes(REFRESH_TOKEN_URL)) {
+    if (!config.url.includes(MAKE_TOKEN_URL) && !config.url.includes(REFRESH_TOKEN_URL)) {
       config.headers.Authorization = "Bearer " + Cookies.get("access");
     }
 
@@ -54,16 +54,15 @@ instance.interceptors.response.use(
         return refreshToken()
           .then((data) => {
             Cookies.set("access", data.access);
+            Cookies.set("refresh", data.refresh);
             requestQueue.forEach((fn) => fn());
             requestQueue = [];
 
             return instance(error.config);
           })
           .catch((error) => {
-            if (error.response.status == 401) {
-              redirectLogin();
-              message.error("令牌过期, 请重新登录");
-            }
+            redirectLogin();
+            // message.error("令牌过期, 请重新登录");
             return Promise.reject(error);
           })
           .finally(() => {

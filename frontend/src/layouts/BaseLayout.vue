@@ -7,7 +7,7 @@
 
       <a-layout>
         <a-layout-header class="headbar">
-          <headbar :collapsed="collapsed" :username="'admin'" @toggleCollapsed="toggleCollapsed" />
+          <headbar :collapsed="collapsed" @toggleCollapsed="toggleCollapsed" />
         </a-layout-header>
 
         <a-layout-content>
@@ -20,6 +20,7 @@
 
 <script>
 import { getInfo } from "@/apis/system";
+import { mapMutations } from "vuex";
 import Cookies from "js-cookie";
 
 export default {
@@ -40,22 +41,16 @@ export default {
       isRouterAlive: true,
     };
   },
-  computed: {
-    username() {
-      return this.$store.state.user.username;
-    },
-    isManager() {
-      return this.$store.state.user.isManager;
-    },
-  },
   methods: {
+    ...mapMutations("system", ["serUserInfo"]),
     initialize() {
       if (!Cookies.get("access") || !Cookies.get("refresh")) {
         return this.$router.push("/user/login");
       }
 
       getInfo().then((data) => {
-        this.$store.commit("setUser", data);
+        console.log(data);
+        this.serUserInfo(data);
       });
     },
     toggleCollapsed() {

@@ -1,4 +1,5 @@
 export default {
+  namespaced: true,
   state: () => ({
     userInfo: {
       id: undefined,
@@ -10,6 +11,7 @@ export default {
   }),
   mutations: {
     serUserInfo(state, item) {
+      console.log(item)
       state.userInfo = item;
     },
   },

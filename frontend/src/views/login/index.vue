@@ -6,10 +6,10 @@
           <a-input size="large" v-model="form.number" />
         </a-form-model-item> -->
         <a-form-model-item prop="username" label="用户名">
-          <a-input size="large" v-model="form.username" />
+          <a-input size="large" v-model="form.username" @pressEnter="login" />
         </a-form-model-item>
         <a-form-model-item prop="password" label="密码">
-          <a-input-password size="large" v-model="form.password" />
+          <a-input-password size="large" v-model="form.password" @pressEnter="login" />
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -28,67 +28,51 @@
         <img :src="wechatCustomerService" width="100" style="margin-top: 8px;" />
       </div>
     </div> -->
-
   </div>
 </template>
 
 <script>
-  // import { getToken } from '@/api/user';
-  import Cookies from 'js-cookie';
+import { makeToken } from "@/apis/system";
+import Cookies from "js-cookie";
 
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        wechatCustomerService: require('@/assets/wechat_customer_service.png'),
-        isLoading: false,
-        form: {
-          number: '',
-          username: '',
-          password: '',
-        },
-        rules: {
-          number: [
-            { required: true, message: '请输入公司编号', trigger: 'change' },
-          ],
-          username: [
-            { required: true, message: '请输入用户名', trigger: 'change' },
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'change' },
-          ],
-        },
-      };
-    },
-    methods: {
-      initialize() {
-        document.onkeypress = (e) => {
-          let code = document.all ? event.keyCode : e.which;
-          if (code == 13) {
-            this.login();
-            return false;
-          }
+export default {
+  name: "Login",
+  data() {
+    return {
+      wechatCustomerService: require("@/assets/wechat_customer_service.png"),
+      isLoading: false,
+      form: {
+        number: "admin",
+        username: "",
+        password: "",
+      },
+      rules: {
+        number: [{ required: true, message: "请输入公司编号", trigger: "change" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "change" }],
+        password: [{ required: true, message: "请输入密码", trigger: "change" }],
+      },
+    };
+  },
+  methods: {
+    login() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.isLoading = true;
+          makeToken(this.form)
+            .then((data) => {
+              Cookies.set("access", data.access);
+              Cookies.set("refresh", data.refresh);
+              this.$router.push("/");
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         }
-      },
-      login() {
-        this.$router.push('/');
-
-        // this.$refs.form.validate(valid => {
-        //   if (valid) {
-        //     this.isLoading = true;
-        //     getToken(this.form).then(data => {
-        //       Cookies.set('access', data.access);
-        //       Cookies.set('refresh', data.refresh);
-        //       this.$router.push('/home');
-        //     }).finally(() => {
-        //       this.isLoading = false;
-        //     });
-        //   }
-        // });
-      },
+      });
     },
-    created() {
-      this.initialize();
-    },
-  }
+  },
+  created() {
+    this.initialize();
+  },
+};
 </script>
