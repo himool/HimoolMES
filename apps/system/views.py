@@ -28,7 +28,7 @@ class RoleViewSet(ModelViewSet):
 
     serializer_class = RoleSerializer
     permission_classes = [IsAuthenticated, IsManagerPermission]
-    search_fields = ['name', 'code', 'remark']
+    search_fields = ['name', 'remark']
     ordering_fields = ['id', 'name', 'update_time', 'create_time']
     prefetch_related_fields = ['permission_set']
     queryset = Role.objects.all()
@@ -65,7 +65,7 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsManagerPermission]
     filterset_class = UserFilter
-    search_fields = ['username', 'name', 'code', 'phone', 'remark']
+    search_fields = ['username', 'name', 'phone', 'remark']
     ordering_fields = ['id', 'username', 'name', 'update_time', 'create_time']
     prefetch_related_fields = ['role_set']
     queryset = User.objects.all()
