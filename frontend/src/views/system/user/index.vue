@@ -51,8 +51,8 @@
 </template>
 
 <script>
-// import { userList, userDestroy, userResetPassword } from '@/api/account'
-// import { roleOption } from '@/api/option'
+import { userList, userDestroy, userResetPassword } from "@/apis/system";
+import { roleOption } from "@/apis/option";
 
 export default {
   components: {
@@ -64,10 +64,7 @@ export default {
         {
           title: "序号",
           dataIndex: "index",
-          key: "index",
-          customRender: (value, item, index) => {
-            return index + 1;
-          },
+          customRender: (value, item, index) => index + 1,
         },
         {
           title: "用户名",
@@ -108,31 +105,21 @@ export default {
   },
   methods: {
     initialize() {
-      this.items = [
-        { id: 1, username: "admin", name: "admin", phone: "", status: true },
-        { id: 2, username: "test", name: "test", phone: "", status: true },
-      ];
-
-      this.roleItems = [
-        { id: 1, name: "管理员" },
-        { id: 2, name: "操作员" },
-      ];
-
-      // this.list();
-      // roleOption({ page_size: 999999 }).then((data) => {
-      //   this.roleItems = data.results;
-      // });
+      this.list();
+      roleOption().then((data) => {
+        this.roleItems = data;
+      });
     },
     list() {
-      // this.loading = true;
-      // userList(this.searchForm)
-      //   .then((data) => {
-      //     this.pagination.total = data.count;
-      //     this.items = data.results;
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true;
+      userList(this.searchForm)
+        .then((data) => {
+          this.pagination.total = data.count;
+          this.items = data.results;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     create(item) {
       this.list();
@@ -141,26 +128,26 @@ export default {
       this.list();
     },
     destroy(id) {
-      // userDestroy({ id }).then(() => {
-      //   this.$message.success("删除成功");
-      //   this.list();
-      // });
+      userDestroy({ id }).then(() => {
+        this.$message.success("删除成功");
+        this.list();
+      });
     },
     resetPassword(id) {
-      // userResetPassword({ id }).then(() => {
-      //   this.$message.success("重置成功");
-      // });
+      userResetPassword({ id }).then(() => {
+        this.$message.success("重置成功");
+      });
     },
     search() {
-      // this.searchForm.page = 1;
-      // this.pagination.current = 1;
-      // this.list();
+      this.searchForm.page = 1;
+      this.pagination.current = 1;
+      this.list();
     },
     tableChange(pagination, filters, sorter) {
-      // this.searchForm.page = pagination.current;
-      // this.pagination.current = pagination.current;
-      // this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
-      // this.list();
+      this.searchForm.page = pagination.current;
+      this.pagination.current = pagination.current;
+      this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
+      this.list();
     },
     openFormModal(item) {
       this.targetItem = { ...item };

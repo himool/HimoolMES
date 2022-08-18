@@ -54,7 +54,6 @@ class User(RefModel):
     username = CharField(max_length=32, verbose_name='用户名')
     password = CharField(max_length=256, verbose_name='密码')
     name = CharField(max_length=64, verbose_name='名称')
-    code = CharField(max_length=64, null=True, blank=True, verbose_name='代码')
     phone = CharField(max_length=32, null=True, blank=True, verbose_name='手机号')
     role_set = ManyToManyField('system.Role', blank=True, related_name='user_set', verbose_name='角色')
     permissions = JSONField(default=list, verbose_name='权限')

@@ -13,15 +13,6 @@
           <a-form-model-item prop="phone" label="手机号">
             <a-input v-model="form.phone" />
           </a-form-model-item>
-          <a-form-model-item prop="email" label="邮箱">
-            <a-input v-model="form.email" />
-          </a-form-model-item>
-          <a-form-model-item prop="sex" label="性别">
-            <a-select default-value="man" style="width: 100%" v-model="form.sex">
-              <a-select-option value="man"> 男 </a-select-option>
-              <a-select-option value="woman"> 女 </a-select-option>
-            </a-select>
-          </a-form-model-item>
           <a-form-model-item prop="is_active" label="状态">
             <a-select v-model="form.is_active" style="width: 100%;">
               <a-select-option :value="true">激活</a-select-option>
@@ -30,8 +21,8 @@
           </a-form-model-item>
           <a-form-model-item prop="roles" label="角色">
             <a-select v-model="form.roles" mode="multiple" allowClear style="width: 100%;">
-              <a-select-option v-for="item in $parent.roleItems" :key="item.id" :value="item.id"
-                >{{ item.name }}
+              <a-select-option v-for="item in $parent.roleItems" :key="item.id" :value="item.id">
+                {{ item.name }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
@@ -46,7 +37,7 @@
 </template>
 
 <script>
-// import { userCreate, userUpdate } from '@/api/account'
+import { userCreate, userUpdate } from "@/apis/system";
 
 export default {
   props: ["visible", "form"],
@@ -57,28 +48,27 @@ export default {
         username: [{ required: true, message: "请输入用户名", trigger: "change" }],
         name: [{ required: true, message: "请输入姓名", trigger: "change" }],
         phone: [{ max: 32, message: "超出最大长度 (32)", trigger: "change" }],
-        email: [{ max: 256, message: "超出最大长度 (256)", trigger: "change" }],
       },
       loading: false,
     };
   },
   methods: {
     confirm() {
-      // this.$refs.form.validate((valid) => {
-      //   if (valid) {
-      //     this.loading = true;
-      //     let func = this.form.id ? userUpdate : userCreate;
-      //     func(this.form)
-      //       .then((data) => {
-      //         this.$message.success(this.form.id ? "修改成功" : "新增成功");
-      //         this.$emit(this.form.id ? "update" : "create", data);
-      //         this.cancel();
-      //       })
-      //       .finally(() => {
-      //         this.loading = false;
-      //       });
-      //   }
-      // });
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          let func = this.form.id ? userUpdate : userCreate;
+          func(this.form)
+            .then((data) => {
+              this.$message.success(this.form.id ? "修改成功" : "新增成功");
+              this.$emit(this.form.id ? "update" : "create", data);
+              this.cancel();
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        }
+      });
     },
     cancel() {
       this.$emit("cancel", false);
