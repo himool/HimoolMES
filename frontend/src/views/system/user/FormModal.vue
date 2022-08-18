@@ -26,6 +26,9 @@
               </a-select-option>
             </a-select>
           </a-form-model-item>
+          <a-form-model-item prop="remark" label="备注">
+            <a-input v-model="form.remark" />
+          </a-form-model-item>
         </a-form-model>
 
         <div v-if="!form.id" style="color: rgb(255, 77, 79); text-align: center;">

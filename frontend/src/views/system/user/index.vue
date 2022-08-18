@@ -21,15 +21,8 @@
           :pagination="pagination"
           @change="tableChange"
         >
-          <div slot="status" slot-scope="value">
-            <template v-if="value">
-              <a-badge status="success" />
-              <span>启用</span>
-            </template>
-            <template v-else>
-              <a-badge status="error" />
-              <span>禁用</span>
-            </template>
+          <div slot="is_active" slot-scope="value">
+            <a-tag :color="value ? 'green' : 'red'">{{ value ? "激活" : "冻结" }}</a-tag>
           </div>
           <div slot="action" slot-scope="value, item">
             <a-button-group>
@@ -81,10 +74,14 @@ export default {
           dataIndex: "phone",
         },
         {
+          title: "备注",
+          dataIndex: "remark",
+        },
+        {
           title: "状态",
-          dataIndex: "status",
-          key: "status",
-          scopedSlots: { customRender: "status" },
+          dataIndex: "is_active",
+          key: "is_active",
+          scopedSlots: { customRender: "is_active" },
         },
         {
           title: "操作",
