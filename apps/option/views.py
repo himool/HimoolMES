@@ -9,6 +9,7 @@ from apps.option.filters import *
 from apps.option.schemas import *
 from apps.option.models import *
 from apps.system.models import *
+from apps.material.models import *
 
 
 # System
@@ -20,6 +21,13 @@ class RoleOptionViewSet(ListViewSet):
     queryset = Role.objects.all()
 
 
+class MaterialCategoryOptionViewSet(ListViewSet):
+    serializer_class = MaterialCategoryOptionSerializer
+    permission_classes = [IsAuthenticated]
+    search_fields = ['name']
+    queryset = MaterialCategory.objects.all()
+
+
 __all__ = [
-    'RoleOptionViewSet',
+    'RoleOptionViewSet', 'MaterialCategoryOptionViewSet',
 ]

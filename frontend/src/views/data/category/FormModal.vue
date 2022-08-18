@@ -17,7 +17,7 @@
 </template>
 
 <script>
-// import { goodsClassificationCreate, goodsClassificationUpdate } from '@/api/goods'
+import { materialCategoryCreate, materialCategoryUpdate } from "@/apis/material";
 
 export default {
   props: ["visible", "form"],
@@ -32,19 +32,19 @@ export default {
   },
   methods: {
     confirm() {
-      // this.$refs.form.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true;
-      //     let func = this.form.id ? goodsClassificationUpdate : goodsClassificationCreate;
-      //     func(this.form).then(data => {
-      //       this.$message.success(this.form.id ? '修改成功' : '新增成功');
-      //       this.$emit(this.form.id ? 'update' : 'create', data);
-      //       this.cancel();
-      //     }).finally(() => {
-      //       this.loading = false;
-      //     });
-      //   }
-      // });
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          let func = this.form.id ? materialCategoryUpdate : materialCategoryCreate;
+          func(this.form).then(data => {
+            this.$message.success(this.form.id ? '修改成功' : '新增成功');
+            this.$emit(this.form.id ? 'update' : 'create', data);
+            this.cancel();
+          }).finally(() => {
+            this.loading = false;
+          });
+        }
+      });
     },
     cancel() {
       this.$emit("cancel", false);

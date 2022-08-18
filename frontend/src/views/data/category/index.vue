@@ -57,10 +57,8 @@
 </template>
 
 <script>
+import { materialCategoryList, materialCategoryDestroy } from "@/apis/material";
 import { exportExcel } from "@/utils/excel";
-// import { goodsClassificationExport } from '@/api/export'
-// import { goodsClassificationTemplate, goodsClassificationImport } from '@/api/import'
-// import { goodsClassificationList, goodsClassificationDestroy } from '@/api/goods'
 
 export default {
   components: {
@@ -72,10 +70,7 @@ export default {
         {
           title: "序号",
           dataIndex: "index",
-          key: "index",
-          customRender: (value, item, index) => {
-            return index + 1;
-          },
+          customRender: (value, item, index) => index + 1,
         },
         {
           title: "名称",
@@ -105,43 +100,39 @@ export default {
   },
   methods: {
     initialize() {
-      this.items = [
-        { id: 1, name: "原料" },
-        { id: 2, name: "成品" },
-      ];
-      // this.list();
+      this.list();
     },
     list() {
-      // this.loading = true;
-      // goodsClassificationList(this.searchForm)
-      //   .then((data) => {
-      //     this.pagination.total = data.count;
-      //     this.items = data.results;
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true;
+      materialCategoryList(this.searchForm)
+        .then((data) => {
+          this.pagination.total = data.count;
+          this.items = data.results;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     create(item) {
-      // this.list();
+      this.list();
     },
     update(item) {
-      // this.list();
+      this.list();
     },
     search() {
-      // this.searchForm.page = 1;
-      // this.pagination.current = 1;
-      // this.list();
+      this.searchForm.page = 1;
+      this.pagination.current = 1;
+      this.list();
     },
     openFormModal(item) {
       this.targetItem = { ...item };
       this.visible = true;
     },
     destroy(id) {
-      // goodsClassificationDestroy({ id }).then(() => {
-      //   this.$message.success("删除成功");
-      //   this.list();
-      // });
+      materialCategoryDestroy({ id }).then(() => {
+        this.$message.success("删除成功");
+        this.list();
+      });
     },
     exportExcel() {
       // goodsClassificationExport(this.searchForm)
@@ -180,10 +171,10 @@ export default {
       // }, 1000);
     },
     tableChange(pagination, filters, sorter) {
-      // this.searchForm.page = pagination.current;
-      // this.pagination.current = pagination.current;
-      // this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
-      // this.list();
+      this.searchForm.page = pagination.current;
+      this.pagination.current = pagination.current;
+      this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
+      this.list();
     },
   },
   mounted() {

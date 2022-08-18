@@ -5,6 +5,9 @@
         <a-col :span="24" style="max-width: 200px; margin-bottom: 12px;">
           <a-input v-model="searchForm.search" placeholder="编号, 名称, 备注" allowClear @pressEnter="search" />
         </a-col>
+        <a-col :span="24" style="max-width: 200px; margin-bottom: 12px;">
+          <material-category-select v-model="searchForm.category" placeholder="分类" />
+        </a-col>
         <a-col :span="24" style="width: 100px; margin-bottom: 12px;">
           <a-button type="primary" icon="search" @click="search">查询</a-button>
         </a-col>
@@ -57,15 +60,13 @@
 </template>
 
 <script>
+import { materialList, materialDestroy } from "@/apis/material";
+import { materialCategoryOption } from "@/apis/option";
 import { exportExcel } from "@/utils/excel";
-// import { goodsInformationExport } from "@/api/export";
-// import { goodsInformationTemplate, goodsInformationImport } from "@/api/import";
-// import { goodsInformationList, goodsInformationDestroy } from "@/api/goods";
-// import { goodsClassificationOption, goodsUnitOption, warehousesOption } from "@/api/option";
-// import { getGoodsNumber } from "@/api/data";
 
 export default {
   components: {
+    MaterialCategorySelect: () => import("@/components/MaterialCategorySelect"),
     FormModal: () => import("./FormModal.vue"),
   },
   data() {
@@ -74,18 +75,15 @@ export default {
         {
           title: "序号",
           dataIndex: "index",
-          key: "index",
-          customRender: (value, item, index) => {
-            return index + 1;
-          },
+          customRender: (value, item, index) => index + 1,
         },
         {
-          title: "物料编号",
+          title: "编号",
           dataIndex: "number",
           sorter: true,
         },
         {
-          title: "物料名称",
+          title: "名称",
           dataIndex: "name",
           sorter: true,
         },
@@ -123,74 +121,42 @@ export default {
   },
   methods: {
     initialize() {
-      this.items = [
-        {
-          id: 1,
-          number: "G000000000001",
-          name: "轴承",
-          category_name: "成品",
-          is_active: true,
-          bom_items: [
-            { id: 2, number: "G000000000002", name: "原料A", quantity: 10 },
-            { id: 3, number: "G000000000003", name: "原料B", quantity: 5 },
-          ],
-          process_items: [
-            { id: 1, number: "P001", name: "退火" },
-            { id: 2, number: "P002", name: "车加工" },
-            { id: 3, number: "P003", name: "热处理" },
-            { id: 4, number: "P004", name: "磨加工" },
-            { id: 5, number: "P005", name: "抛光" },
-            { id: 6, number: "P006", name: "防锈" },
-          ],
-        },
-        {
-          id: 2,
-          number: "G000000000002",
-          name: "原料A",
-          category_name: "原料",
-          is_active: true,
-        },
-        {
-          id: 3,
-          number: "G000000000003",
-          name: "原料B",
-          category_name: "原料",
-          is_active: true,
-        },
-      ];
-      // this.list();
+      this.list();
+      materialCategoryOption().then((data) => {
+        this.categoryItems = data;
+      });
     },
     list() {
-      // this.loading = true;
-      // goodsInformationList(this.searchForm)
-      //   .then((data) => {
-      //     this.pagination.total = data.count;
-      //     this.items = data.results;
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true;
+      materialList(this.searchForm)
+        .then((data) => {
+          this.pagination.total = data.count;
+          this.items = data.results;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     create(item) {
-      // this.list();
+      this.list();
     },
     update(item) {
-      // this.list();
+      this.list();
     },
     search() {
-      // this.searchForm.page = 1;
-      // this.pagination.current = 1;
-      // this.list();
+      this.searchForm.page = 1;
+      this.pagination.current = 1;
+      this.list();
     },
     openFormModal(item) {
       this.targetItem = { ...item };
       this.visible = true;
     },
     destroy(id) {
-      // goodsInformationDestroy({ id }).then(() => {
-      //   this.$message.success("删除成功");
-      //   this.list();
-      // });
+      materialDestroy({ id }).then(() => {
+        this.$message.success("删除成功");
+        this.list();
+      });
     },
     exportExcel() {
       // goodsInformationExport(this.searchForm)
@@ -229,10 +195,10 @@ export default {
       // }, 1000);
     },
     tableChange(pagination, filters, sorter) {
-      // this.searchForm.page = pagination.current;
-      // this.pagination.current = pagination.current;
-      // this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
-      // this.list();
+      this.searchForm.page = pagination.current;
+      this.pagination.current = pagination.current;
+      this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
+      this.list();
     },
   },
   mounted() {
