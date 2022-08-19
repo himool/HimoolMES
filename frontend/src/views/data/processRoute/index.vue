@@ -6,7 +6,7 @@
           <a-input v-model="searchForm.search" placeholder="备注" allowClear @pressEnter="search" />
         </a-col>
         <a-col :span="24" style="width: 200px">
-          <material-select v-model="searchForm.finish_product" placeholder="物料" @change="search" />
+          <material-select v-model="searchForm.material" placeholder="物料" @change="search" />
         </a-col>
         <a-col :span="24" style="width: 100px">
           <a-button type="primary" icon="search" @click="search" style="width: 100%">
