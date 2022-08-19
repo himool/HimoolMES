@@ -32,6 +32,7 @@ class ProcessRouteSerializer(BaseSerializer):
         validators = [TeamUniqueValidator(fields=['material'], message='物料的工艺路线已存在')]
 
     def create(self, validated_data):
+        print(validated_data)
         process_items = validated_data.pop('process_items')
         process_route = super().create(validated_data)
 
