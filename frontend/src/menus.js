@@ -14,12 +14,11 @@ export default [
     name: "基础数据",
     icon: "table",
     submenus: [
-      { key: "/data/category", name: "物料分类" },
+      { key: "/data/material_category", name: "物料分类" },
       { key: "/data/material", name: "物料管理" },
-      { key: "/data/bom", name: "BOM管理" },
+      { key: "/data/material_bill", name: "BOM管理" },
       { key: "/data/process", name: "工序管理" },
       { key: "/data/process_route", name: "工艺路线" },
-      { key: "/data/station", name: "工位管理" },
     ],
   },
   {

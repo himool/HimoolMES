@@ -4,16 +4,16 @@ export default {
   redirect: "/",
   children: [
     {
-      path: "category",
-      component: () => import("@/views/data/category"),
+      path: "material_category",
+      component: () => import("@/views/data/materialCategory"),
     },
     {
       path: "material",
       component: () => import("@/views/data/material"),
     },
     {
-      path: "bom",
-      component: () => import("@/views/data/bom"),
+      path: "material_bill",
+      component: () => import("@/views/data/materialBill"),
     },
     {
       path: "process_route",

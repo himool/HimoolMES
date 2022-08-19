@@ -21,6 +21,13 @@ class MaterialCategoryOptionSerializer(BaseSerializer):
         fields = ['id', 'name']
 
 
+class MaterialOptionSerializer(BaseSerializer):
+
+    class Meta:
+        model = Material
+        fields = ['id', 'number', 'name', 'spec', 'unit']
+
+
 __all__ = [
-    'RoleOptionSerializer', 'MaterialCategoryOptionSerializer',
+    'RoleOptionSerializer', 'MaterialCategoryOptionSerializer', 'MaterialOptionSerializer',
 ]

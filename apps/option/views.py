@@ -21,6 +21,7 @@ class RoleOptionViewSet(ListViewSet):
     queryset = Role.objects.all()
 
 
+# Material
 class MaterialCategoryOptionViewSet(ListViewSet):
     serializer_class = MaterialCategoryOptionSerializer
     permission_classes = [IsAuthenticated]
@@ -28,6 +29,14 @@ class MaterialCategoryOptionViewSet(ListViewSet):
     queryset = MaterialCategory.objects.all()
 
 
+class MaterialOptionViewSet(PagingViewSet):
+    serializer_class = MaterialOptionSerializer
+    permission_classes = [IsAuthenticated]
+    filterset_fields = ['type', 'category']
+    search_fields = ['number', 'name']
+    queryset = Material.objects.all()
+
+
 __all__ = [
-    'RoleOptionViewSet', 'MaterialCategoryOptionViewSet',
+    'RoleOptionViewSet', 'MaterialCategoryOptionViewSet', 'MaterialOptionViewSet',
 ]
