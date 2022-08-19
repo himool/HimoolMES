@@ -32,8 +32,7 @@ class ProcessRouteSerializer(BaseSerializer):
         validators = [TeamUniqueValidator(fields=['material'], message='物料的工艺路线已存在')]
 
     def create(self, validated_data):
-        print(validated_data)
-        process_items = validated_data.pop('process_items')
+        process_items = validated_data.pop('process_set')
         process_route = super().create(validated_data)
 
         Process.objects.bulk_create([Process(team=self.team, route=process_route, name=process_item['name'],
@@ -43,7 +42,7 @@ class ProcessRouteSerializer(BaseSerializer):
         return process_route
 
     def update(self, instance, validated_data):
-        process_items = validated_data.pop('process_items')
+        process_items = validated_data.pop('process_set')
         process_route = super().update(instance, validated_data)
 
         create_process_set = []
