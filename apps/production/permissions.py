@@ -1,6 +1,10 @@
 from extensions.permissions import *
 
 
-__all__ = [
+class ProcessRoutePermission(ModelPermission):
+    code = 'process_route'
 
+
+__all__ = [
+    'ProcessRoutePermission',
 ]

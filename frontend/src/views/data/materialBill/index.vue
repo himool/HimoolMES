@@ -1,9 +1,9 @@
 <template>
   <div>
-    <a-card title="物料BOM">
+    <a-card title="BOM管理">
       <a-row :gutter="[12, 12]">
         <a-col :span="24" style="width: 256px">
-          <a-input v-model="searchForm.search" placeholder="物料编号, 名称" allowClear @pressEnter="search" />
+          <a-input v-model="searchForm.search" placeholder="成品编号, 名称" allowClear @pressEnter="search" />
         </a-col>
         <a-col :span="24" style="width: 200px">
           <material-select v-model="searchForm.finish_product" placeholder="物料" @change="search" />

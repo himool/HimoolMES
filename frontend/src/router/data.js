@@ -19,13 +19,5 @@ export default {
       path: "process_route",
       component: () => import("@/views/data/processRoute"),
     },
-    {
-      path: "process",
-      component: () => import("@/views/data/process"),
-    },
-    {
-      path: "station",
-      component: () => import("@/views/data/station"),
-    },
   ],
 };

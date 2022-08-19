@@ -1,208 +1,144 @@
 <template>
   <div>
     <a-card title="工艺路线">
-      <a-row gutter="16">
-        <a-col :span="24" style="max-width: 200px; margin-bottom: 12px;">
-          <a-input v-model="searchForm.search" placeholder="编号, 名称" allowClear @pressEnter="search" />
+      <a-row :gutter="[12, 12]">
+        <a-col :span="24" style="width: 256px">
+          <a-input v-model="searchForm.search" placeholder="备注" allowClear @pressEnter="search" />
         </a-col>
-        <a-col :span="24" style="width: 100px; margin-bottom: 12px;">
-          <a-button type="primary" icon="search" @click="search">查询</a-button>
+        <a-col :span="24" style="width: 200px">
+          <material-select v-model="searchForm.finish_product" placeholder="物料" @change="search" />
+        </a-col>
+        <a-col :span="24" style="width: 100px">
+          <a-button type="primary" icon="search" @click="search" style="width: 100%">
+            查询
+          </a-button>
+        </a-col>
+        <a-col :span="24" style="width: 130px; float: right">
+          <a-button type="primary" icon="plus" style="width: 100%" @click="createModalVisible = true">
+            新增BOM
+          </a-button>
         </a-col>
 
-        <a-col :span="24" style="width: 300px; margin-bottom: 12px;">
-          <a-button-group>
-            <a-button icon="file-excel" @click="downloadTemplate">模板下载</a-button>
-            <a-upload name="file" :showUploadList="false" :customRequest="importExcel">
-              <a-button icon="upload">导入</a-button>
-            </a-upload>
-            <a-button icon="download" @click="exportExcel">导出</a-button>
-          </a-button-group>
+        <a-col :span="24">
+          <a-table
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataItems"
+            :loading="dataLoading"
+            :pagination="pagination"
+            @change="changeTable"
+          >
+            <template slot="action" slot-scope="value, item">
+              <table-action :dataItem="item" @update="update" @destroy="destroy" />
+            </template>
+          </a-table>
         </a-col>
-
-        <div style="margin-bottom: 12px; float: right;">
-          <a-button type="primary" icon="plus" style="margin: 0 8px;" @click="openFormModal({})">新增工艺路线</a-button>
-        </div>
-      </a-row>
-
-      <a-row style="margin-top: 12px;">
-        <a-table
-          rowKey="id"
-          size="small"
-          :columns="columns"
-          :dataSource="items"
-          :loading="loading"
-          :pagination="pagination"
-          @change="tableChange"
-        >
-          <div slot="is_active" slot-scope="value">
-            <a-tag :color="value ? 'green' : 'red'">{{ value ? "激活" : "冻结" }}</a-tag>
-          </div>
-          <div slot="action" slot-scope="value, item">
-            <a-button-group>
-              <a-button icon="edit" size="small" @click="openFormModal(item)">编辑</a-button>
-              <a-popconfirm title="确定删除吗" @confirm="destroy(item.id)">
-                <a-button type="danger" icon="delete" size="small">删除</a-button>
-              </a-popconfirm>
-            </a-button-group>
-          </div>
-        </a-table>
       </a-row>
     </a-card>
 
-    <form-modal v-model="visible" :form="targetItem" @create="create" @update="update" />
+    <create-form-modal v-model="createModalVisible" @create="create" @cancel="createModalVisible = false" />
   </div>
 </template>
 
 <script>
-// import { deviceList, deviceDestroy } from "@/api/manage";
+import { insertItem, replaceItem, removeItem } from "@/utils/functions";
+import { materialBillList } from "@/apis/material";
 
 export default {
   components: {
-    FormModal: () => import("./FormModal.vue"),
+    MaterialSelect: () => import("@/components/MaterialSelect"),
+    CreateFormModal: () => import("./CreateFormModal"),
+    TableAction: () => import("./TableAction"),
   },
   data() {
     return {
+      searchForm: { search: "", page: 1, ordering: undefined },
+      pagination: { current: 1, total: 0, pageSize: 16 },
+      dataLoading: false,
+
+      // Table
       columns: [
         {
           title: "序号",
           dataIndex: "index",
-          key: "index",
-          customRender: (value, item, index) => {
-            return index + 1;
-          },
+          customRender: (_value, _item, index) => index + 1,
         },
         {
-          title: "编号",
+          title: "成品编号",
           dataIndex: "number",
+          customRender: (_value, item) => item.finish_product_item.number,
         },
         {
-          title: "名称",
+          title: "成品名称",
           dataIndex: "name",
+          customRender: (_value, item) => item.finish_product_item.name,
         },
         {
-          title: "分类",
-          dataIndex: "category_name",
+          title: "原料编号",
+          dataIndex: "number",
+          customRender: (_value, item) => item.raw_material_item.number,
         },
         {
-          title: "状态",
-          dataIndex: "is_active",
-          scopedSlots: { customRender: "is_active" },
+          title: "原料名称",
+          dataIndex: "name",
+          customRender: (_value, item) => item.raw_material_item.name,
+        },
+        {
+          title: "数量",
+          dataIndex: "quantity",
+        },
+        {
+          title: "备注",
+          dataIndex: "remark",
         },
         {
           title: "操作",
           dataIndex: "action",
           scopedSlots: { customRender: "action" },
-          width: "156px",
         },
       ],
-      searchForm: { search: "", page: 1, page_size: 15 },
-      pagination: { current: 1, total: 0, pageSize: 15 },
-      loading: false,
-      items: [],
+      dataItems: [],
 
-      visible: false,
-      targetItem: {},
+      createModalVisible: false,
     };
   },
   methods: {
-    initialize() {
-      this.items = [
-        {
-          id: 1,
-          number: "G000000000001",
-          name: "轴承",
-          category_name: "成品",
-          is_active: true,
-          process_items: [
-            { id: 1, number: "P001", name: "退火" },
-            { id: 2, number: "P002", name: "车加工" },
-            { id: 3, number: "P003", name: "热处理" },
-            { id: 4, number: "P004", name: "磨加工" },
-            { id: 5, number: "P005", name: "抛光" },
-            { id: 6, number: "P006", name: "防锈" },
-          ],
-        },
-      ];
-      // this.list();
+    search() {
+      this.searchForm.page = 1;
+      this.pagination.current = 1;
+      this.list();
     },
     list() {
-      // this.loading = true;
-      // deviceList(this.searchForm)
-      //   .then((response) => {
-      //     console.log(response);
-      //     this.pagination.total = response.data.count;
-      //     this.items = response.data.results;
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      this.dataLoading = true;
+      materialBillList(this.searchForm)
+        .then((data) => {
+          this.pagination.total = data.count;
+          this.dataItems = data.results;
+        })
+        .finally(() => {
+          this.dataLoading = false;
+        });
     },
     create(item) {
-      // this.list();
+      this.dataItems = insertItem(this.dataItems, item);
     },
     update(item) {
-      // this.list();
+      this.dataItems = replaceItem(this.dataItems, item);
     },
-    search() {
-      // this.searchForm.page = 1;
-      // this.pagination.current = 1;
-      // this.list();
+    destroy(item) {
+      this.dataItems = removeItem(this.dataItems, item);
     },
-    openFormModal(item) {
-      this.targetItem = { ...item };
-      this.visible = true;
-    },
-    destroy(id) {
-      // deviceDestroy({ id }).then(() => {
-      //   this.$message.success("删除成功");
-      //   this.list();
-      // });
-    },
-    tableChange(pagination, filters, sorter) {
-      // this.searchForm.page = pagination.current;
-      // this.pagination.current = pagination.current;
-      // this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
-      // this.list();
-    },
-    exportExcel() {
-      // goodsInformationExport(this.searchForm)
-      //   .then((resp) => {
-      //     exportExcel(resp.data, "物料信息列表");
-      //   })
-      //   .catch((err) => {
-      //     this.$message.error(err.response.data.error);
-      //   });
-    },
-    downloadTemplate() {
-      // goodsInformationTemplate()
-      //   .then((resp) => {
-      //     exportExcel(resp.data, "物料信息导入模板");
-      //   })
-      //   .catch((err) => {
-      //     this.$message.error(err.response.data.error);
-      //   });
-    },
-    importExcel(item) {
-      // let data = new FormData();
-      // data.append("file", item.file);
-      // this.importLoading = true;
-      // setTimeout(() => {
-      //   goodsInformationImport(data)
-      //     .then(() => {
-      //       this.$message.success("导入成功");
-      //       this.list();
-      //     })
-      //     .catch((err) => {
-      //       this.$message.error(err.response.data.detail);
-      //     })
-      //     .finally(() => {
-      //       this.importLoading = false;
-      //     });
-      // }, 1000);
+    changeTable(pagination, _filters, sorter) {
+      this.searchForm.page = pagination.current;
+      this.pagination.current = pagination.current;
+      this.searchForm.ordering = `${sorter.order == "descend" ? "-" : ""}${sorter.field}`;
+      this.list();
     },
   },
   mounted() {
-    this.initialize();
+    this.list();
   },
 };
 </script>
+
+<style scoped></style>

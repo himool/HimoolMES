@@ -17,7 +17,6 @@ export default [
       { key: "/data/material_category", name: "物料分类" },
       { key: "/data/material", name: "物料管理" },
       { key: "/data/material_bill", name: "BOM管理" },
-      { key: "/data/process", name: "工序管理" },
       { key: "/data/process_route", name: "工艺路线" },
     ],
   },
