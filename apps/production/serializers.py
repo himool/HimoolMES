@@ -61,7 +61,8 @@ class ProcessRouteSerializer(BaseSerializer):
             create_process_set.append(Process(team=self.team, route=process_route, name=process_item['name'],
                                               index=process_item['index'], remark=process_item.get('remark')))
 
-        Process.objects.filter(route=process_route).exclude(id__in=update_process_set).delete()
+        process_ids = map(lambda instance: instance.id, update_process_set)
+        Process.objects.filter(route=process_route).exclude(id__in=process_ids).delete()
         Process.objects.bulk_update(update_process_set, ['name', 'index', 'remark'])
         Process.objects.bulk_create(create_process_set)
 
