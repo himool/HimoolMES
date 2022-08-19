@@ -42,7 +42,7 @@ class MaterialBillSerializer(BaseSerializer):
             ref_name = 'material.MaterialBillSerializer.MaterialItemSerializer'
 
     finish_product_item = MaterialItemSerializer(source='finish_product', read_only=True, label='成品Item')
-    raw_material_item = MaterialItemSerializer(source='raw_material', read_only=True, label='原材料Item')
+    raw_material_item = MaterialItemSerializer(source='raw_material', read_only=True, label='原料Item')
 
     class Meta:
         model = MaterialBill

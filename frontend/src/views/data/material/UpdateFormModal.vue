@@ -53,7 +53,7 @@
             style="width: 100%; text-align: center;"
           >
             <a-radio-button value="raw_material" style="width: 50%">
-              原材料
+              原料
             </a-radio-button>
             <a-radio-button value="finish_product" style="width: 50%">
               成品

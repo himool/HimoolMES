@@ -10,7 +10,7 @@
         </a-col>
         <a-col :span="24" style="width: 200px">
           <a-select v-model="searchForm.type" placeholder="类型" allowClear style="width: 100%" @change="search">
-            <a-select-option key="raw_material" value="raw_material">原材料</a-select-option>
+            <a-select-option key="raw_material" value="raw_material">原料</a-select-option>
             <a-select-option key="finish_product" value="finish_product">成品</a-select-option>
           </a-select>
         </a-col>

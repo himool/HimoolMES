@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { materialDestroy } from "@/apis/material";
+import { materialBillDestroy } from "@/apis/material";
 
 export default {
   components: {
@@ -34,7 +34,7 @@ export default {
       this.$emit("update", item);
     },
     destroy() {
-      materialDestroy({ id: this.dataItem.id }).then(() => {
+      materialBillDestroy({ id: this.dataItem.id }).then(() => {
         this.$message.success("删除成功");
         this.$emit("destroy", this.dataItem);
       });

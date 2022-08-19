@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model="visible"
-      title="新增物料"
+      title="新增BOM"
       :confirmLoading="confirmLoading"
       :destroyOnClose="true"
       :maskClosable="false"
@@ -10,77 +10,39 @@
       @ok="handleConfirm"
     >
       <a-form :form="dataForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        <a-form-item label="编号">
-          <a-input
+        <a-form-item label="成品">
+          <material-select
             v-decorator="[
-              'number',
+              'finish_product',
               {
-                rules: [
-                  { required: true, message: '请输入物料编号' },
-                  { max: 32, message: '超出最大长度(32)' },
-                ],
+                rules: [{ required: true, message: '请选择成品' }],
               },
             ]"
             :allowClear="true"
           />
         </a-form-item>
-        <a-form-item label="名称">
-          <a-input
+        <a-form-item label="原料">
+          <material-select
             v-decorator="[
-              'name',
+              'raw_material',
               {
-                rules: [
-                  { required: true, message: '请输入物料名称' },
-                  { max: 64, message: '超出最大长度(64)' },
-                ],
+                rules: [{ required: true, message: '请选择原料' }],
               },
             ]"
             :allowClear="true"
           />
         </a-form-item>
-        <a-form-item label="类型">
-          <a-radio-group
+
+        <a-form-item label="数量">
+          <a-input-number
             v-decorator="[
-              'type',
+              'quantity',
               {
-                initialValue: 'raw_material',
-                rules: [{ required: true, message: '请选择物料类型' }],
+                initialValue: 1,
+                rules: [{ required: true, message: '请输入数量' }],
               },
             ]"
-            button-style="solid"
-            style="width: 100%; text-align: center;"
-          >
-            <a-radio-button value="raw_material" style="width: 50%">
-              原材料
-            </a-radio-button>
-            <a-radio-button value="finish_product" style="width: 50%">
-              成品
-            </a-radio-button>
-          </a-radio-group>
-        </a-form-item>
-        <a-form-item label="分类">
-          <material-category-select v-decorator="['category']" />
-        </a-form-item>
-        <a-form-item label="规格">
-          <a-input
-            v-decorator="[
-              'spec',
-              {
-                rules: [{ max: 64, message: '超出最大长度(64)' }],
-              },
-            ]"
-            :allowClear="true"
-          />
-        </a-form-item>
-        <a-form-item label="单位">
-          <a-input
-            v-decorator="[
-              'unit',
-              {
-                rules: [{ max: 64, message: '超出最大长度(64)' }],
-              },
-            ]"
-            :allowClear="true"
+            style="width: 100%"
           />
         </a-form-item>
         <a-form-item label="备注">
@@ -100,11 +62,11 @@
 </template>
 
 <script>
-import { materialCreate } from "@/apis/material";
+import { materialBillCreate } from "@/apis/material";
 
 export default {
   components: {
-    MaterialCategorySelect: () => import("@/components/MaterialCategorySelect"),
+    MaterialSelect: () => import("@/components/MaterialSelect"),
   },
   props: ["visible"],
   model: { prop: "visible", event: "cancel" },
@@ -119,7 +81,7 @@ export default {
       this.dataForm.validateFields((error, values) => {
         if (error === null) {
           this.confirmLoading = true;
-          materialCreate(values)
+          materialBillCreate(values)
             .then((data) => {
               this.$emit("create", data);
               this.$message.success("创建成功");

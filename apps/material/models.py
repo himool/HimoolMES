@@ -19,7 +19,7 @@ class Material(RefModel):
     class Type(TextChoices):
         """类型"""
 
-        RAW_MATERIAL = ('raw_material', '原材料')
+        RAW_MATERIAL = ('raw_material', '原料')
         FINISH_PRODUCT = ('finish_product', '成品')
 
     number = CharField(max_length=32, verbose_name='编号')
@@ -42,7 +42,7 @@ class MaterialBill(Model):
     finish_product = ForeignKey('material.Material', on_delete=CASCADE,
                                 related_name='raw_material_bill_set', verbose_name='成品')
     raw_material = ForeignKey('material.Material', on_delete=CASCADE,
-                              related_name='finish_product_bill_set', verbose_name='原材料')
+                              related_name='finish_product_bill_set', verbose_name='原料')
     quantity = FloatField(verbose_name='数量')
     remark = CharField(max_length=256, null=True, blank=True, verbose_name='备注')
     team = ForeignKey('system.Team', on_delete=CASCADE, related_name='material_bill_set')

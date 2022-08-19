@@ -6,7 +6,7 @@
           <a-input v-model="searchForm.search" placeholder="物料编号, 名称" allowClear @pressEnter="search" />
         </a-col>
         <a-col :span="24" style="width: 200px">
-          <material-category-select v-model="searchForm.category" placeholder="分类" @change="search" />
+          <material-select v-model="searchForm.finish_product" placeholder="物料" @change="search" />
         </a-col>
         <a-col :span="24" style="width: 100px">
           <a-button type="primary" icon="search" @click="search" style="width: 100%">
@@ -42,11 +42,11 @@
 
 <script>
 import { insertItem, replaceItem, removeItem } from "@/utils/functions";
-import { materialList } from "@/apis/material";
+import { materialBillList } from "@/apis/material";
 
 export default {
   components: {
-    MaterialCategorySelect: () => import("@/components/MaterialCategorySelect"),
+    MaterialSelect: () => import("@/components/MaterialSelect"),
     CreateFormModal: () => import("./CreateFormModal"),
     TableAction: () => import("./TableAction"),
   },
@@ -64,29 +64,28 @@ export default {
           customRender: (_value, _item, index) => index + 1,
         },
         {
-          title: "编号",
+          title: "成品编号",
           dataIndex: "number",
+          customRender: (_value, item) => item.finish_product_item.number,
         },
         {
-          title: "名称",
+          title: "成品名称",
           dataIndex: "name",
+          customRender: (_value, item) => item.finish_product_item.name,
         },
         {
-          title: "类型",
-          dataIndex: "type_display",
+          title: "原料编号",
+          dataIndex: "number",
+          customRender: (_value, item) => item.raw_material_item.number,
         },
         {
-          title: "分类",
-          dataIndex: "category_name",
-          customRender: (_value, item) => item.category_item?.name,
+          title: "原料名称",
+          dataIndex: "name",
+          customRender: (_value, item) => item.raw_material_item.name,
         },
         {
-          title: "规格",
-          dataIndex: "spec",
-        },
-        {
-          title: "单位",
-          dataIndex: "unit",
+          title: "数量",
+          dataIndex: "quantity",
         },
         {
           title: "备注",
@@ -111,7 +110,7 @@ export default {
     },
     list() {
       this.dataLoading = true;
-      materialList(this.searchForm)
+      materialBillList(this.searchForm)
         .then((data) => {
           this.pagination.total = data.count;
           this.dataItems = data.results;
