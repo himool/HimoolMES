@@ -13,9 +13,9 @@
             查询
           </a-button>
         </a-col>
-        <a-col :span="24" style="width: 130px; float: right">
+        <a-col :span="24" style="width: 160px; float: right">
           <a-button type="primary" icon="plus" style="width: 100%" @click="createModalVisible = true">
-            新增BOM
+            新增工艺路线
           </a-button>
         </a-col>
 
@@ -42,7 +42,7 @@
 
 <script>
 import { insertItem, replaceItem, removeItem } from "@/utils/functions";
-import { materialBillList } from "@/apis/material";
+import { processRouteList } from "@/apis/production";
 
 export default {
   components: {
@@ -64,28 +64,19 @@ export default {
           customRender: (_value, _item, index) => index + 1,
         },
         {
-          title: "成品编号",
+          title: "物料编号",
           dataIndex: "number",
           customRender: (_value, item) => item.finish_product_item.number,
         },
         {
-          title: "成品名称",
+          title: "物料名称",
           dataIndex: "name",
           customRender: (_value, item) => item.finish_product_item.name,
         },
         {
-          title: "原料编号",
-          dataIndex: "number",
-          customRender: (_value, item) => item.raw_material_item.number,
-        },
-        {
-          title: "原料名称",
-          dataIndex: "name",
-          customRender: (_value, item) => item.raw_material_item.name,
-        },
-        {
-          title: "数量",
-          dataIndex: "quantity",
+          title: "规格",
+          dataIndex: "spec",
+          customRender: (_value, item) => item.raw_material_item.spec,
         },
         {
           title: "备注",
@@ -110,7 +101,7 @@ export default {
     },
     list() {
       this.dataLoading = true;
-      materialBillList(this.searchForm)
+      processRouteList(this.searchForm)
         .then((data) => {
           this.pagination.total = data.count;
           this.dataItems = data.results;

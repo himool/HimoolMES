@@ -22,7 +22,7 @@ class ProcessRouteSerializer(BaseSerializer):
             fields = ['id', 'name', 'index', 'remark']
             ref_name = 'production.ProcessRouteSerializer.ProcessItemSerializer'
 
-    material_item = ProcessItemSerializer(source='material', many=True, read_only=True, label='物料Item')
+    material_item = MaterialItemSerializer(source='material', many=True, read_only=True, label='物料Item')
     process_items = ProcessItemSerializer(source='process_set', many=True, label='工序Items')
 
     class Meta:
