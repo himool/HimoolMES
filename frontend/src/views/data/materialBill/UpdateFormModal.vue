@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      v-model="visible"
+      :visible="visible"
       title="编辑BOM"
       :confirmLoading="confirmLoading"
       :destroyOnClose="true"

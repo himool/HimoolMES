@@ -1,8 +1,9 @@
 <template>
   <div>
     <a-modal
-      v-model="visible"
-      title="编辑BOM"
+      :visible="visible"
+      title="编辑工艺路线"
+      :width="780"
       :confirmLoading="confirmLoading"
       :destroyOnClose="true"
       :maskClosable="false"
@@ -10,56 +11,50 @@
       @ok="handleConfirm"
     >
       <a-form :form="dataForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        <a-form-item label="成品">
-          <material-select
-            v-decorator="[
-              'finish_product',
-              {
-                initialValue: dataItem.finish_product,
-                rules: [{ required: true, message: '请选择成品' }],
-              },
-            ]"
-            :defaultItem="dataItem.finish_product_item"
-            :allowClear="true"
-          />
-        </a-form-item>
-        <a-form-item label="原料">
-          <material-select
-            v-decorator="[
-              'raw_material',
-              {
-                initialValue: dataItem.raw_material,
-                rules: [{ required: true, message: '请选择原料' }],
-              },
-            ]"
-            :defaultItem="dataItem.raw_material_item"
-            :allowClear="true"
-          />
-        </a-form-item>
-        <a-form-item label="数量">
-          <a-input-number
-            v-decorator="[
-              'quantity',
-              {
-                initialValue: dataItem.quantity,
-                rules: [{ required: true, message: '请输入数量' }],
-              },
-            ]"
-            style="width: 100%"
-          />
-        </a-form-item>
-        <a-form-item label="备注">
-          <a-input
-            v-decorator="[
-              'remark',
-              {
-                initialValue: dataItem.remark,
-                rules: [{ max: 256, message: '超出最大长度(256)' }],
-              },
-            ]"
-            :allowClear="true"
-          />
-        </a-form-item>
+        <a-row>
+          <a-col :span="12">
+            <a-form-item label="物料">
+              <material-select
+                v-decorator="[
+                  'material',
+                  {
+                    initialValue: dataItem.material,
+                    rules: [{ required: true, message: '请选择物料' }],
+                  },
+                ]"
+                :defaultItem="dataItem.material_item"
+                :allowClear="true"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="备注">
+              <a-input
+                v-decorator="[
+                  'remark',
+                  {
+                    initialValue: dataItem.remark,
+                    rules: [{ max: 256, message: '超出最大长度(256)' }],
+                  },
+                ]"
+                :allowClear="true"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-item label="工序" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
+              <process-table
+                v-decorator="[
+                  'process_items',
+                  {
+                    initialValue: dataItem.process_items,
+                    rules: [{ required: true, message: '请添加工序' }],
+                  },
+                ]"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-modal>
   </div>
@@ -71,6 +66,7 @@ import { processRouteUpdate } from "@/apis/production";
 export default {
   components: {
     MaterialSelect: () => import("@/components/MaterialSelect"),
+    ProcessTable: () => import("@/components/ProcessTable"),
   },
   props: ["visible", "dataItem"],
   model: { prop: "visible", event: "cancel" },
@@ -85,7 +81,7 @@ export default {
       this.dataForm.validateFields((error, values) => {
         if (error === null) {
           this.confirmLoading = true;
-          materialBillUpdate({ id: this.dataItem.id, ...values })
+          processRouteUpdate({ id: this.dataItem.id, ...values })
             .then((data) => {
               this.$emit("update", data);
               this.$message.success("更新成功");

@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      v-model="visible"
+      :visible="visible"
       title="新增物料"
       :confirmLoading="confirmLoading"
       :destroyOnClose="true"

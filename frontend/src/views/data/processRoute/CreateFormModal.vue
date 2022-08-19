@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      v-model="visible"
+      :visible="visible"
       title="新增工艺路线"
       :width="780"
       :confirmLoading="confirmLoading"

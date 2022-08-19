@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      v-model="visible"
+      :visible="visible"
       :width="560"
       :confirmLoading="loading"
       :maskClosable="false"

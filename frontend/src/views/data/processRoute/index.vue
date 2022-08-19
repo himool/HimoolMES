@@ -66,17 +66,17 @@ export default {
         {
           title: "物料编号",
           dataIndex: "number",
-          customRender: (_value, item) => item.finish_product_item.number,
+          customRender: (_value, item) => item.material_item.number,
         },
         {
           title: "物料名称",
           dataIndex: "name",
-          customRender: (_value, item) => item.finish_product_item.name,
+          customRender: (_value, item) => item.material_item.name,
         },
         {
           title: "规格",
           dataIndex: "spec",
-          customRender: (_value, item) => item.raw_material_item.spec,
+          customRender: (_value, item) => item.material_item.spec,
         },
         {
           title: "备注",
