@@ -6,7 +6,7 @@ from apps.material.models import *
 
 
 class ProcessRouteSerializer(BaseSerializer):
-    
+
     class MaterialItemSerializer(BaseSerializer):
 
         class Meta:
@@ -27,7 +27,7 @@ class ProcessRouteSerializer(BaseSerializer):
 
     class Meta:
         model = ProcessRoute
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'material_item']
         fields = ['material', 'remark', 'process_items', *read_only_fields]
         validators = [TeamUniqueValidator(fields=['material'], message='物料的工艺路线已存在')]
 
