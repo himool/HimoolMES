@@ -7,7 +7,7 @@
             @click="backIndex" />
         </div>
         <div class="title" style="margin-bottom: 24px; margin-top: -4px;">
-          <span style="cursor: pointer; font-size: 24px;" @click="backIndex">宁波通用轴承MES系统</span>
+          <span style="cursor: pointer; font-size: 24px;" @click="backIndex">海鸥云MES系统</span>
         </div>
         <!-- <div style="text-align: center; font-size: 16px; color: #666; margin-bottom: 24px;">MES - 让企业管理更简单高效</div> -->
       </div>
@@ -21,7 +21,7 @@
     name: 'UserLayout',
     data() {
       return {
-        logo: require('@/assets/logo.jpeg'),
+        logo: require('@/assets/logo.png'),
       }
     },
     methods: {

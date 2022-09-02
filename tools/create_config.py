@@ -14,7 +14,7 @@ def create_nginx_config():
     if is_need_create == 'y':
         listen_port = input('请输入 Nginx 监听端口:\n')
         server_port = input('请输入 Django 启动端口:\n')
-        static_path = BASE_DIR / 'frontend/build/'
+        static_path = BASE_DIR / 'frontend/dist/'
 
         with open('configs/nginx.conf', 'w') as file:
             file.write(f"""\
