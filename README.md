@@ -35,4 +35,10 @@
     python manage.py runserver
 2. 启动前端服务
     npm run serve
-
+3. 浏览器访问前端地址
+    
+### PC界面截图
+![看板管理](https://gitee.com/haioucloud/mes/raw/master/img/%E7%9C%8B%E6%9D%BF%E7%AE%A1%E7%90%86.png)
+![生产管理](https://gitee.com/haioucloud/mes/raw/master/img/%E7%94%9F%E4%BA%A7%E7%AE%A1%E7%90%86.png)
+![质量管理](https://gitee.com/haioucloud/mes/raw/master/img/%E8%B4%A8%E9%87%8F%E7%AE%A1%E7%90%86.png)
+![设备管理](https://gitee.com/haioucloud/mes/raw/master/img/%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86.png)
