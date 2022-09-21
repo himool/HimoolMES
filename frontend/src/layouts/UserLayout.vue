@@ -1,15 +1,16 @@
 <template>
   <div class="background" ref="card">
     <a-card class="card">
-      <div>
-        <div style="text-align: center; padding-top: 32px;">
-          <img :src="logo" width="112" style="margin-top: 12px; margin-left: 8px; cursor: pointer;"
-            @click="backIndex" />
+            <div>
+        <div style="text-align: center; padding-top: 16px">
+          <img :src="logo" width="100" style="cursor: pointer; margin-top: 16px" @click="backIndex" />
         </div>
-        <div class="title" style="margin-bottom: 24px; margin-top: 8px;">
-          <span style="cursor: pointer; font-size: 24px;" @click="backIndex">Himool MES</span>
+        <div class="title" style="margin-top: 16px">
+          <span style="cursor: pointer; font-size: 24px" @click="backIndex">Himool MES</span>
         </div>
-        <!-- <div style="text-align: center; font-size: 16px; color: #666; margin-bottom: 24px;">MES - 让企业管理更简单高效</div> -->
+        <div style="text-align: center; font-size: 16px; color: #1890ff; margin-top: 8px; margin-bottom: 24px">
+          <span>盒木制造执行系统</span>
+        </div>
       </div>
       <router-view />
     </a-card>
